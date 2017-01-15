@@ -18,9 +18,11 @@ __fastcall TForm1::TForm1(TComponent* Owner)
 		: TForm(Owner)
 		, drawPosLeft(300)
 		, drawPosTop(88)
+		, drawPosRight(550)
+		, drawPosBottom(338)
 {
         bmp=new Graphics::TBitmap;
-        bmp->Width=250;
+		bmp->Width=250;
         bmp->Height=250;
 		rgbqn=new RGBQUAD[256];    //RGBQUAD array for paletted bitmaps (4 & 8 bit)
 		GetBmpInfo();
@@ -325,11 +327,11 @@ void __fastcall TForm1::GetBmpInfo()
      ShowBmpInfo((AnsiString)"8 bit bitmap", bs.bmWidth,bs.bmHeight);
      break;
      default:
-     ShowBmpInfo((AnsiString)"Unsupported file format" + IntToStr(bs.bmBitsPixel) + "bit bitmap" , bs.bmWidth,bs.bmHeight);
+	 ShowBmpInfo((AnsiString)"Unsupported file format" + IntToStr(bs.bmBitsPixel) + "bit bitmap" , bs.bmWidth,bs.bmHeight);
        }
      bmp->Width= Image1->Picture->Bitmap->Width;
      bmp->Height=Image1->Picture->Bitmap->Height;
-     bmp->PixelFormat=Image1->Picture->Bitmap->PixelFormat;
+	 bmp->PixelFormat=Image1->Picture->Bitmap->PixelFormat;
 	 bmp->Width > 250 ? bmprgnw = 250: bmprgnw = bmp->Width;
 	 bmp->Height > 250 ? bmprgnh = 250: bmprgnh = bmp->Height;
      GetColors(ColorDialog1->Color); //refresh the color to indicate the format change
@@ -365,32 +367,31 @@ void __fastcall TForm1::Button2Click(TObject *Sender)
 void __fastcall TForm1::Image2MouseDown(TObject *Sender,
       TMouseButton Button, TShiftState Shift, int X, int Y)
 {
-		if(Button == mbLeft) {
-		if(drawPosLeft < X && X < 550 )
-		if(Y > drawPosTop && Y <  338)  {
-
+		if(Button == mbLeft){
+		if(drawPosLeft < X && X < drawPosRight ){
+		if(Y > drawPosTop && Y <  drawPosBottom) {
 		leftMouseDown=true;
-        Canvas->Pen->Style=psDot;
+		Canvas->Pen->Style=psDot;
 		Canvas->Pen->Width = 1;
-        sp.x=X;
-        sp.y=Y;
-                }
-        }
+		sp.x = X;
+		sp.y = Y;
+		}}}
+
 }
 void __fastcall TForm1::Image2MouseMove(TObject *Sender,
        TShiftState Shift, int X, int Y)
 {
         if(leftMouseDown) {
        // leftMouseDown=true;
-		 if(drawPosLeft < X && X < 550 &&  Y > drawPosTop && Y <  338)
+		 if(drawPosLeft < X && X < drawPosRight &&  Y > drawPosTop && Y <  drawPosBottom)
          {
-		   HRGN rrgn=CreateRectRgn(300,88,550,340);
+		   HRGN rrgn=CreateRectRgn(drawPosLeft,drawPosTop,drawPosRight,drawPosBottom+2);
            SelectClipRgn(Canvas->Handle,rrgn);
            DeleteObject(rrgn);
 		   Canvas->Draw(drawPosLeft,drawPosTop,Image1->Picture->Bitmap);
 
-        Canvas->MoveTo(sp.x,sp.y);
-        Canvas->LineTo(X,Y);
+		Canvas->MoveTo(sp.x,sp.y);
+		Canvas->LineTo(X,Y);
         }
         else
         leftMouseDown=false;
@@ -403,14 +404,14 @@ void __fastcall TForm1::Image2MouseUp(TObject *Sender, TMouseButton Button,
       TShiftState Shift, int X, int Y)
 {
 		 if(leftMouseDown)      {
-		  if(drawPosLeft < X && X < 550 &&  Y > drawPosTop && Y <  338)
+		  if(drawPosLeft < X && X < drawPosRight &&  Y > drawPosTop && Y <  drawPosBottom)
        {
                 ep.x=X;
                 ep.y=Y;
-                Canvas->Brush->Style=bsClear;
+				Canvas->Brush->Style = bsClear;
                 switch(shShape) {
                 case shEllipse:
-                Canvas->Rectangle(sp.x,sp.y,ep.x,ep.y);
+				Canvas->Rectangle(sp.x,sp.y,ep.x,ep.y);
                 Canvas->Ellipse(sp.x,sp.y,ep.x,ep.y);
                 break;
                 case shRect:
@@ -489,12 +490,12 @@ void __fastcall TForm1::FormPaint(TObject *Sender)
 {
 		 HRGN rrgn;
       //clip output to a rectangular region 250*250 in size so even for large images we don't draw the whole image
-		rrgn=CreateRectRgn(298,86,552,340);
+		rrgn=CreateRectRgn(drawPosLeft-2,drawPosTop-2,drawPosRight+2, drawPosBottom+2);
         SelectClipRgn(Canvas->Handle,rrgn);
         DeleteObject(rrgn);
         Canvas->Pen->Style=psDash;
 		Canvas->Draw(drawPosLeft, drawPosTop,Image1->Picture->Bitmap);
-		Canvas->Rectangle(drawPosLeft-2,drawPosTop,552,340); //rectangle used for outlining shapes (ellipse, round rect,rect)
+		Canvas->Rectangle(drawPosLeft-2,drawPosTop-2,drawPosRight+2, drawPosBottom+2); //rectangle used for outlining shapes (ellipse, round rect,rect)
 
 }
 //---------------------------------------------------------------------------
@@ -514,7 +515,8 @@ void __fastcall TForm1::XMoveRegion(TObject *Sender)
 {
 	   #if defined(MOVE_REGION)
 	   static int oldposx = 100;
-	   if((sp.x+TrackBar2->Position-100 > drawPosLeft ||  sp.x+TrackBar2->Position-100 < 550 ) &&  (ep.x+TrackBar2->Position-100 < 550 ||  ep.x+TrackBar2->Position-100 > 300))     {
+	   if((sp.x+TrackBar2->Position-100 > drawPosLeft ||  sp.x+TrackBar2->Position-100 < drawPosRight ) &&
+	   (ep.x+TrackBar2->Position-100 < drawPosRight ||  ep.x+TrackBar2->Position-100 > drawPosLeft))     {
 	   sp.x+=TrackBar2->Position - oldposx;
 	   ep.x+=TrackBar2->Position - oldposx;
 	   moving = true;
@@ -529,7 +531,8 @@ void __fastcall TForm1::YMoveRegion(TObject *Sender)
 {
 		 #if defined(MOVE_REGION)
 	   static int oldposy=100;
-       if((sp.y+TrackBar3->Position-100  > 90 || sp.y+TrackBar3->Position-100  < 340) &&  (ep.y +TrackBar3->Position-100 < 340 || ep.y +TrackBar3->Position-100 > 90))    {
+	   if((sp.y+TrackBar3->Position-100  > drawPosTop+2 || sp.y+TrackBar3->Position-100  < drawPosBottom+2)
+		&&  (ep.y +TrackBar3->Position-100 < drawPosRight || ep.y +TrackBar3->Position-100 > drawPosTop+2))    {
        sp.y+=TrackBar3->Position-oldposy;
 	   ep.y+=TrackBar3->Position-oldposy;
 	   moving = true;
@@ -564,14 +567,13 @@ void __fastcall TForm1::CreateClipRgn()
 }
 void __fastcall TForm1::CheckBox3Click(TObject *Sender)
 {
-
 		BYTE* cptr;
         BYTE* bptr;
 	 //   hRgn hRgn;
      unsigned factor;
 	 Graphics::TBitmap* bmp8bit;
-     if (CheckBox3->Checked) {
-      switch(bs.bmBitsPixel) {
+	 if (CheckBox3->Checked) {
+	  switch(bs.bmBitsPixel) {
      //switch(bmp->PixelFormat) {
       case 4://pf4bit:
       case 8://pf8bit:
@@ -607,20 +609,21 @@ void __fastcall TForm1::CheckBox3Click(TObject *Sender)
         bptr++;
         }
         }
-         bmp8bit = new Graphics::TBitmap();
-        if (bmp8bit) {
-        bmp8bit->PixelFormat = pf8bit;
-		bmp8bit->Assign(bmp);
-        bmp->Assign(bmp8bit);
-       delete bmp8bit;
+		bmp8bit = new Graphics::TBitmap();
+		if (bmp8bit){
+			bmp8bit->PixelFormat = pf8bit;
+			bmp8bit->Assign(bmp);
+			bmp->Assign(bmp8bit);
+			delete bmp8bit;
         }
         break;
-        }
+		}
         CreateClipRgn();
 		Canvas->Draw(drawPosLeft, drawPosTop, bmp);
 	   }
-	   else
+	   else{
 		DrawTransImage();
+	   }
 }
 //---------------------------------------------------------------------------
 
