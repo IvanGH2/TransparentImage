@@ -22,15 +22,15 @@ __fastcall TForm1::TForm1(TComponent* Owner)
 		, drawPosBottom(338)
 {
         bmp=new Graphics::TBitmap;
-		bmp->Width=250;
+	bmp->Width=250;
         bmp->Height=250;
-		rgbqn=new RGBQUAD[256];    //RGBQUAD array for paletted bitmaps (4 & 8 bit)
-		GetBmpInfo();
+	rgbqn=new RGBQUAD[256];    //RGBQUAD array for paletted bitmaps (4 & 8 bit)
+	GetBmpInfo();
         ColorDialog1->Color=clWhite;
         GetColors(clWhite); //initialize the glass color to white
         shShape=shNone;
-		Canvas->Brush->Style=bsClear;
-		DoubleBuffered = true;
+	Canvas->Brush->Style=bsClear;
+	DoubleBuffered = true;
 }
 //---------------------------------------------------------------------------
 
@@ -208,8 +208,8 @@ void __fastcall TForm1::DrawTransImage()
 		 Canvas->Draw(drawPosLeft,drawPosTop,bmp);
 		 #if defined(INVERT_COLORS)
 		 if(CheckBox2->Checked){
-				InvertRgn(Canvas->Handle,hRgn);
-				}
+			InvertRgn(Canvas->Handle,hRgn);
+		}
 		#endif
         moving=false;
         DeleteObject(hRgn);
@@ -354,9 +354,9 @@ void __fastcall TForm1::Button2Click(TObject *Sender)
     Canvas->Brush->Color=Form1->Color;
 	Canvas->Rectangle(drawPosLeft-2, drawPosTop-2,552,350);
 
-	HRGN rrgn;
+    HRGN rrgn;
 	  //clip output to a rect region 250*250 in size so even for large images we don't draw the whole image
-	rrgn=CreateRectRgn(drawPosLeft, drawPosTop,550,340);
+    rrgn=CreateRectRgn(drawPosLeft, drawPosTop,550,340);
     SelectClipRgn(Canvas->Handle,rrgn);
     DeleteObject(rrgn);
     Canvas->Brush->Style=bsClear;
@@ -403,15 +403,15 @@ void __fastcall TForm1::Image2MouseMove(TObject *Sender,
 void __fastcall TForm1::Image2MouseUp(TObject *Sender, TMouseButton Button,
       TShiftState Shift, int X, int Y)
 {
-		 if(leftMouseDown)      {
-		  if(drawPosLeft < X && X < drawPosRight &&  Y > drawPosTop && Y <  drawPosBottom)
-       {
+	if(leftMouseDown)      {
+		if(drawPosLeft < X && X < drawPosRight &&  Y > drawPosTop && Y <  drawPosBottom)
+      		 {
                 ep.x=X;
                 ep.y=Y;
-				Canvas->Brush->Style = bsClear;
+		Canvas->Brush->Style = bsClear;
                 switch(shShape) {
                 case shEllipse:
-				Canvas->Rectangle(sp.x,sp.y,ep.x,ep.y);
+		Canvas->Rectangle(sp.x,sp.y,ep.x,ep.y);
                 Canvas->Ellipse(sp.x,sp.y,ep.x,ep.y);
                 break;
                 case shRect:
@@ -488,14 +488,14 @@ void __fastcall TForm1::SpeedButton2Click(TObject *Sender)
 
 void __fastcall TForm1::FormPaint(TObject *Sender)
 {
-		 HRGN rrgn;
+	HRGN rrgn;
       //clip output to a rectangular region 250*250 in size so even for large images we don't draw the whole image
-		rrgn=CreateRectRgn(drawPosLeft-2,drawPosTop-2,drawPosRight+2, drawPosBottom+2);
+	rrgn=CreateRectRgn(drawPosLeft-2,drawPosTop-2,drawPosRight+2, drawPosBottom+2);
         SelectClipRgn(Canvas->Handle,rrgn);
         DeleteObject(rrgn);
         Canvas->Pen->Style=psDash;
-		Canvas->Draw(drawPosLeft, drawPosTop,Image1->Picture->Bitmap);
-		Canvas->Rectangle(drawPosLeft-2,drawPosTop-2,drawPosRight+2, drawPosBottom+2); //rectangle used for outlining shapes (ellipse, round rect,rect)
+	Canvas->Draw(drawPosLeft, drawPosTop,Image1->Picture->Bitmap);
+	Canvas->Rectangle(drawPosLeft-2,drawPosTop-2,drawPosRight+2, drawPosBottom+2); //rectangle used for outlining shapes (ellipse, round rect,rect)
 
 }
 //---------------------------------------------------------------------------
@@ -529,7 +529,7 @@ void __fastcall TForm1::XMoveRegion(TObject *Sender)
 
 void __fastcall TForm1::YMoveRegion(TObject *Sender)
 {
-		 #if defined(MOVE_REGION)
+	 #if defined(MOVE_REGION)
 	   static int oldposy=100;
 	   if((sp.y+TrackBar3->Position-100  > drawPosTop+2 || sp.y+TrackBar3->Position-100  < drawPosBottom+2)
 		&&  (ep.y +TrackBar3->Position-100 < drawPosRight || ep.y +TrackBar3->Position-100 > drawPosTop+2))    {
@@ -545,7 +545,7 @@ void __fastcall TForm1::YMoveRegion(TObject *Sender)
 		}   */
         }
 	   oldposy=TrackBar3->Position;
-	   #endif
+	#endif
 }
 
 void __fastcall TForm1::CreateClipRgn()
@@ -567,7 +567,7 @@ void __fastcall TForm1::CreateClipRgn()
 }
 void __fastcall TForm1::CheckBox3Click(TObject *Sender)
 {
-		BYTE* cptr;
+	BYTE* cptr;
         BYTE* bptr;
 	 //   hRgn hRgn;
      unsigned factor;
