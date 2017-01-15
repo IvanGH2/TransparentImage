@@ -1,5 +1,21 @@
 //---------------------------------------------------------------------------
 
+#ifndef transimageH
+#define transimageH
+//---------------------------------------------------------------------------
+#include <Classes.hpp>
+#include <Controls.hpp>
+#include <StdCtrls.hpp>
+#include <Forms.hpp>
+#include <ExtCtrls.hpp>
+#include <ComCtrls.hpp>
+#include <Graphics.hpp>
+#include <Dialogs.hpp>
+#include <jpeg.hpp>
+#include <Buttons.hpp>
+#include <ExtDlgs.hpp>
+
+
 #define INVERT_COLORS      //comment this line to disable color inversion
 #define MOVE_REGION         //comment this line to  disable region movement
 
@@ -44,11 +60,12 @@ __published:	// IDE-managed Components
         TStaticText *StaticText9;
         TStaticText *StaticText10;
         TCheckBox *CheckBox3;
-	TStatusBar *StatusBar1;
+		TStatusBar *StatusBar1;
 
-	void __fastcall XMoveRegion(TObject *Sender);
-	void __fastcall YMoveRegion(TObject *Sender);
-	void __fastcall AlphaChange(TObject *Sender);
+
+		void __fastcall XMoveRegion(TObject *Sender);
+		void __fastcall YMoveRegion(TObject *Sender);
+		void __fastcall AlphaChange(TObject *Sender);
         void __fastcall FormDestroy(TObject *Sender);
         void __fastcall Button1Click(TObject *Sender);
         void __fastcall SpeedButton1Click(TObject *Sender);
@@ -65,27 +82,28 @@ __published:	// IDE-managed Components
        
         void __fastcall FormPaint(TObject *Sender);
         void __fastcall SpeedButton4Click(TObject *Sender);
-	void __fastcall CheckBox2Click(TObject *Sender);
-	void __fastcall CheckBox3Click(TObject *Sender);
+		void __fastcall CheckBox2Click(TObject *Sender);
+		void __fastcall CheckBox3Click(TObject *Sender);
 
 private:	// User declarations
          const unsigned int drawPosLeft;
-	 const unsigned int drawPosTop;
-	 const unsigned int drawPosRight;
-	 const unsigned int drawPosBottom;
-	 BITMAP bs;
-	 Graphics::TBitmap* bmp;
-	 HRGN hRgn;
-	 TPoint sp,ep;
-	 bool leftMouseDown;
-	 TShapes shShape;
-	 RGBQUAD *rgbqn;
+		 const unsigned int drawPosTop;
+		 const unsigned int drawPosRight;
+		 const unsigned int drawPosBottom;
+
+		 BITMAP bs;
+		 Graphics::TBitmap* bmp;
+		 HRGN hRgn;
+		 TPoint sp,ep;
+		 bool leftMouseDown;
+		 TShapes shShape;
+		 RGBQUAD *rgbqn;
          BYTE maxr,maxg,maxb;
          BYTE red,green,blue;
          int shift,shiftgreen;
          int colors;
-	 int bmprgnw,bmprgnh;
-	 bool moving;
+		 int bmprgnw,bmprgnh;
+		 bool moving;
 
 public:		// User declarations
         __fastcall TForm1(TComponent* Owner);
@@ -100,4 +118,3 @@ public:		// User declarations
 extern PACKAGE TForm1 *Form1;
 //---------------------------------------------------------------------------
 #endif
-      
