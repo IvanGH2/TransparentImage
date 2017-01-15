@@ -9,5 +9,5 @@ apply to any operating system (e.g. pixel manipulation by using pointer arithmet
   - allows different transparency levels from completely transparent to completely opaque
   - conversion of color images to greyscale ones
   
-The program can be compiled using Borland C++ Builder. If you just want to see what it does without compiling it, take a
+The program can be compiled using Borland C++ Builder 6 or higher. If you just want to see what it does without compiling it, take a
 look at the screenshots provided in the images folder.
